@@ -1,0 +1,284 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdyx.apidoc.dao.ApiDao">
+    <sql id="where">
+        where 1 = 1
+        <if test="conditions!=null and conditions.size()>0">
+            <foreach collection="conditions" index="index" item="item">
+                ${item.connector} ${item.column} ${item.operator}
+                <choose>
+                    <when test="item.operator=='in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='not in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='between'">
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value[0]} and ${item.value[1]}
+                            </when>
+                            <otherwise>
+                                '${item.value[0]}' and '${item.value[1]}'
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value}
+                            </when>
+                            <otherwise>
+                                '${item.value}'
+                            </otherwise>
+                        </choose>
+                    </otherwise>
+                </choose>
+            </foreach>
+        </if>
+        <if test="start!=null and start>=0 and size!=null and size>0 and size>start">
+            limit #{start},#{size}
+        </if>
+    </sql>
+    <sql id="count">
+        where 1 = 1
+        <if test="conditions!=null and conditions.size()>0">
+            <foreach collection="conditions" index="index" item="item">
+                ${item.connector} ${item.column} ${item.operator}
+                <choose>
+                    <when test="item.operator=='in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='not in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='between'">
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value[0]} and ${item.value[1]}
+                            </when>
+                            <otherwise>
+                                '${item.value[0]}' and '${item.value[1]}'
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value}
+                            </when>
+                            <otherwise>
+                                '${item.value}'
+                            </otherwise>
+                        </choose>
+                    </otherwise>
+                </choose>
+            </foreach>
+        </if>
+    </sql>
+    <sql id="and">
+        and 1 = 1
+        <if test="conditions!=null and conditions.size()>0">
+            <foreach collection="conditions" index="index" item="item">
+                ${item.connector} ${item.column} ${item.operator}
+                <choose>
+                    <when test="item.operator=='in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='not in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='between'">
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value[0]} and ${item.value[1]}
+                            </when>
+                            <otherwise>
+                                '${item.value[0]}' and '${item.value[1]}'
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value}
+                            </when>
+                            <otherwise>
+                                '${item.value}'
+                            </otherwise>
+                        </choose>
+                    </otherwise>
+                </choose>
+            </foreach>
+        </if>
+        <if test="start!=null and start>=0 and size!=null and size>0 and size>start">
+            limit #{start},#{size}
+        </if>
+    </sql>
+    <insert id="save" parameterType="com.gdyx.apidoc.model.Api">
+    insert into apis(
+      id,
+project_id,
+name,
+url,
+model_id,
+protocol,
+produces,
+consumes,
+method,
+version,
+status,
+description
+    )
+    values(
+    #{id},
+#{project_id},
+#{name},
+#{url},
+#{model_id},
+#{protocol},
+#{produces},
+#{consumes},
+#{method},
+#{version},
+#{status},
+#{description}
+    )
+</insert>
+    <insert id="saveOrUpdate" parameterType="com.gdyx.apidoc.model.Api">
+        insert into apis(
+        id,
+        project_id,
+        name,
+        url,
+        model_id,
+        protocol,
+        produces,
+        consumes,
+        method,
+        version,
+        status,
+        description
+        )
+        values(
+        #{id},
+        #{project_id},
+        #{name},
+        #{url},
+        #{model_id},
+        #{protocol},
+        #{produces},
+        #{consumes},
+        #{method},
+        #{version},
+        #{status},
+        #{description}
+        )
+    </insert>
+    <update id="update" parameterType="com.gdyx.apidoc.model.Api">
+        update apis set project_id=#{project_id},
+name=#{name},
+url=#{url},
+model_id=#{model_id},
+protocol=#{protocol},
+produces=#{produces},
+consumes=#{consumes},
+method=#{method},
+version=#{version},
+status=#{status},
+description=#{description}
+where id=#{id}
+    </update>
+    <delete id="delete" parameterType="String">
+        delete from apis where id=#{id}
+    </delete>
+    <select id="findApiById" parameterType="String" resultType="com.gdyx.apidoc.model.Api">
+        select * from apis where id=#{id}
+    </select>
+    <select id="count" parameterType="Map" resultType="Integer">
+        select count(*) from apis
+        <include refid="count"/>
+    </select>
+    <select id="findApis" parameterType="Map" resultType="com.gdyx.apidoc.model.Api">
+        select * from apis
+        <include refid="where"/>
+    </select>
+    <select id="findApisLinkAs" parameterType="Map" resultType="com.gdyx.apidoc.model.Api">
+        SELECT
+        a.id,
+        p.`name` AS project_id,
+        a.`name`,
+        a.Url,
+        pm.`name` AS model_id,
+        a.Protocol,
+        a.Produces,
+        a.Consumes,
+        a.Method,
+        a.Version,
+        a.`Status`,
+        a.Description
+        FROM
+        apis AS a,
+        projects AS p,
+        projectmodels AS pm
+        WHERE
+        a.project_id = p.id
+        AND a.model_id = pm.id
+        <include refid="and"/>
+    </select>
+</mapper>

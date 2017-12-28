@@ -1,0 +1,98 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <script src="/layui/layui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/editor/css/wangEditor.min.css"/>
+    <script src="/editor/js/wangEditor.min.js"></script>
+    <style>
+        .layui-container {
+            top: 10px;
+        }
+
+        #submit {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-container">
+    <div class="layui-row">
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">接口名称</label>
+                <div class="layui-input-block">
+                    <select name="api_id" lay-verify="required" lay-search="lay-search">
+                        <option value="">请选择</option>
+                        <label th:each="item:${ApiList}">
+                            <option th:value="${item.id}" th:text="${item.name}"></option>
+                        </label>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">示例标签</label>
+                <div class="layui-input-block">
+                    <input type="text" name="tag" required="required" lay-verify="required" placeholder="请输入示例标签"
+                           autocomplete="off" class="layui-input"/>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">示例内容</label>
+                <div class="layui-input-block">
+                    <textarea style="height: 400px;" id="content" name="content" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item" id="submit">
+                <div class="layui-input-block" style="margin-left: 0">
+                    <button class="layui-btn" lay-submit="lay-submit" lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    //Editor
+    var editor = new wangEditor("content");
+    editor.config.uploadImgUrl = "http://image.yinxindata.com/Upload";
+    editor.config.uploadImgFileName = "file";
+    editor.create();
+
+    //Demo
+    layui.use(['form', 'table'], function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            //向服务端发送增加指令
+            $.ajax({
+                url: "/ApiResponseExample/Save",
+                data: JSON.stringify(data.field),
+                type: 'POST',
+                contentType: "application/json",
+                dataType: 'JSON',
+                async: false,
+                success: function (result) {
+                    if (result.respCode == '2000') {
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                        parent.layer.msg("增加成功");
+                        var table = parent.layui.table;
+                        table.reload('apiResponseExample');
+                    } else {
+                        parent.layer.msg("增加失败")
+                    }
+                },
+                error: function (msg) {
+                    layer.msg(msg);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</html>

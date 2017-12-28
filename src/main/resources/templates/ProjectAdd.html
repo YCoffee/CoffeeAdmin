@@ -1,0 +1,80 @@
+<head>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <script src="/layui/layui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <style>
+        .layui-container {
+            top: 50%;
+            height: 240px;
+            margin-top: -120px; /* negative half of the height */
+        }
+
+        #submit {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-container">
+    <div class="layui-row">
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required="required" lay-verify="required" placeholder="请输入项目名称"
+                           autocomplete="off"
+                           class="layui-input"/>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">项目描述</label>
+                <div class="layui-input-block">
+                    <textarea name="description" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item" id="submit">
+                <div class="layui-input-block" style="margin-left: 0">
+                    <button class="layui-btn" lay-submit="lay-submit" lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    //Demo
+    layui.use(['form', 'table'], function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            //向服务端发送增加指令
+            $.ajax({
+                url: "/Project/Save",
+                data: JSON.stringify(data.field),
+                type: 'POST',
+                contentType: "application/json",
+                dataType: 'JSON',
+                async: false,
+                success: function (result) {
+                    if (result.respCode == '2000') {
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                        parent.layer.msg("增加成功");
+                        var table = parent.layui.table;
+                        table.reload('project');
+                    } else {
+                        parent.layer.msg("增加失败")
+                    }
+                },
+                error: function (msg) {
+                    layer.msg(msg);
+                }
+            });
+            return false;
+        });
+    });
+</script>

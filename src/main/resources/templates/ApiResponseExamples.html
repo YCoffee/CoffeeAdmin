@@ -1,0 +1,31 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <title>Doc 文档数据管理</title>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <style>
+        .layui-row {
+            margin-top: 8px;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-row">
+    <div class="layui-col-md3">
+        <button class="layui-btn layui-btn-radius layui-btn-primary" id="add">增　　加</button>
+    </div>
+</div>
+<table id="apiResponseExample" lay-filter="apiResponseExampleFilter"></table>
+</body>
+<script src="/layui/layui.js"></script>
+<script src="/js/ApiResponseExample.js"></script>
+<script type="text/html" id="operateTpl">
+    <a class="layui-btn layui-btn-sm" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">删除</a>
+</script>
+</html>

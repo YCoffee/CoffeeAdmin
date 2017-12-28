@@ -1,0 +1,153 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <script src="/layui/layui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <style>
+        .layui-container {
+            top: 10px;
+        }
+
+        #submit {
+            text-align: center;
+        }
+    </style>
+</head>
+<div class="layui-container">
+    <div class="layui-row">
+        <form class="layui-form layui-form-pane" action="">
+            <div hidden="hidden">
+                <input name="id" th:value="${Api.id}"/>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-block">
+                    <select name="project_id" lay-verify="required" lay-search="lay-search">
+                        <option value=""></option>
+                        <label th:each="item:${ProjectList}">
+                            <option th:value="${item.id}" th:text="${item.name}"
+                                    th:selected="${#strings.contains(item.id,Api.project_id)}"></option>
+                        </label>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">接口名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required="required" lay-verify="required" placeholder="请输入接口名称"
+                           autocomplete="off" class="layui-input" th:value="${Api.name}"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">接口地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="url" required="required" lay-verify="required" placeholder="请输入接口地址"
+                           autocomplete="off" class="layui-input" th:value="${Api.url}"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属模块</label>
+                <div class="layui-input-block">
+                    <select name="model_id" lay-search="lay-search">
+                        <option value=""></option>
+                        <label th:each="item:${ProjectModelList}">
+                            <option th:value="${item.id}" th:text="${item.name}"
+                                    th:selected="${#strings.contains(item.id,Api.model_id)}"></option>
+                        </label>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">接口协议</label>
+                <div class="layui-input-block">
+                    <input type="text" name="protocol" placeholder="请输入接口协议"
+                           autocomplete="off" class="layui-input" th:value="${Api.protocol}"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">请求格式</label>
+                <div class="layui-input-block">
+                    <input type="text" name="produces" placeholder="请输入请求格式"
+                           autocomplete="off" class="layui-input" th:value="${Api.produces}"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">响应格式</label>
+                <div class="layui-input-block">
+                    <input type="text" name="consumes" placeholder="请输入响应格式"
+                           autocomplete="off" class="layui-input" th:value="${Api.consumes}"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">请求方法</label>
+                <div class="layui-input-block">
+                    <input type="text" name="method" placeholder="请输入请求方法"
+                           autocomplete="off" class="layui-input" th:value="${Api.method}"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">接口版本</label>
+                <div class="layui-input-block">
+                    <input type="text" name="version" placeholder="请输入接口版本"
+                           autocomplete="off" class="layui-input" th:value="${Api.version}"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">接口状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="status" value="0" title="已上线" th:checked="${Api.status == 0}"/>
+                    <input type="radio" name="status" value="1" title="开发中" th:checked="${Api.status == 1}"/>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">项目描述</label>
+                <div class="layui-input-block">
+                    <textarea name="description" placeholder="请输入内容" class="layui-textarea"
+                              th:text="${Api.description}"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item" id="submit">
+                <div class="layui-input-block" style="margin-left: 0">
+                    <button class="layui-btn" lay-submit="lay-submit" lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            //向服务端发送修改指令
+            $.ajax({
+                url: "/Api/Update",
+                data: JSON.stringify(data.field),
+                type: 'POST',
+                contentType: "application/json",
+                dataType: 'JSON',
+                async: false,
+                success: function (result) {
+                    if (result.respCode == '2000') {
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+                        parent.layer.msg("修改成功");
+                        var table = parent.layui.table;
+                        table.reload('api');
+                    } else {
+                        parent.layer.msg("修改失败")
+                    }
+                },
+                error: function (msg) {
+                    layer.msg("出错！" + msg);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</html>

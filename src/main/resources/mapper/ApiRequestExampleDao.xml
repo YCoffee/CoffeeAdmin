@@ -1,0 +1,213 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdyx.apidoc.dao.ApiRequestExampleDao">
+    <sql id="where">
+        where 1 = 1
+        <if test="conditions!=null and conditions.size()>0">
+            <foreach collection="conditions" index="index" item="item">
+                ${item.connector} ${item.column} ${item.operator}
+                <choose>
+                    <when test="item.operator=='in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='not in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='between'">
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value[0]} and ${item.value[1]}
+                            </when>
+                            <otherwise>
+                                '${item.value[0]}' and '${item.value[1]}'
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value}
+                            </when>
+                            <otherwise>
+                                '${item.value}'
+                            </otherwise>
+                        </choose>
+                    </otherwise>
+                </choose>
+            </foreach>
+        </if>
+        <if test="start!=null and start>=0 and size!=null and size>0 and size>start">
+            limit #{start},#{size}
+        </if>
+    </sql>
+    <sql id="count">
+        where 1 = 1
+        <if test="conditions!=null and conditions.size()>0">
+            <foreach collection="conditions" index="index" item="item">
+                ${item.connector} ${item.column} ${item.operator}
+                <choose>
+                    <when test="item.operator=='in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='not in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='between'">
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value[0]} and ${item.value[1]}
+                            </when>
+                            <otherwise>
+                                '${item.value[0]}' and '${item.value[1]}'
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value}
+                            </when>
+                            <otherwise>
+                                '${item.value}'
+                            </otherwise>
+                        </choose>
+                    </otherwise>
+                </choose>
+            </foreach>
+        </if>
+    </sql>
+    <sql id="and">
+        and 1 = 1
+        <if test="conditions!=null and conditions.size()>0">
+            <foreach collection="conditions" index="index" item="item">
+                ${item.connector} ${item.column} ${item.operator}
+                <choose>
+                    <when test="item.operator=='in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='not in'">
+                        <foreach collection="item.value" item="inItem" index="inIndex" open="(" separator="," close=")">
+                            <choose>
+                                <when test="item.type=='N'.toString()">
+                                    ${inItem}
+                                </when>
+                                <otherwise>
+                                    '${inItem}'
+                                </otherwise>
+                            </choose>
+                        </foreach>
+                    </when>
+                    <when test="item.operator=='between'">
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value[0]} and ${item.value[1]}
+                            </when>
+                            <otherwise>
+                                '${item.value[0]}' and '${item.value[1]}'
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        <choose>
+                            <when test="item.type=='N'.toString()">
+                                ${item.value}
+                            </when>
+                            <otherwise>
+                                '${item.value}'
+                            </otherwise>
+                        </choose>
+                    </otherwise>
+                </choose>
+            </foreach>
+        </if>
+        <if test="start!=null and start>=0 and size!=null and size>0 and size>start">
+            limit #{start},#{size}
+        </if>
+    </sql>
+    <insert id="save" parameterType="com.gdyx.apidoc.model.ApiRequestExample">
+        insert into ApiRequestExamples(id,api_id,tag,content)
+        values(#{id},#{api_id},#{tag},#{content})
+    </insert>
+    <insert id="saveOrUpdate" parameterType="com.gdyx.apidoc.model.ApiRequestExample">
+        replace into ApiRequestExamples(id,api_id,tag,content)
+        values(#{id},#{api_id},#{tag},#{content})
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete from ApiRequestExamples where id=#{id}
+    </delete>
+    <update id="update" parameterType="com.gdyx.apidoc.model.ApiRequestExample">
+        update ApiRequestExamples set
+        api_id=#{api_id},tag=#{tag},content=#{content}
+        where id=#{id}
+    </update>
+    <select id="findApiRequestExampleById" parameterType="String" resultType="com.gdyx.apidoc.model.ApiRequestExample">
+        select * from ApiRequestExamples where id=#{id}
+    </select>
+    <select id="count" resultType="Integer" parameterType="Map">
+        select count(*) from ApiRequestExamples
+        <include refid="count"/>
+    </select>
+    <select id="findApiRequestExamples" parameterType="Map" resultType="com.gdyx.apidoc.model.ApiRequestExample">
+        select * from ApiRequestExamples
+        <include refid="where"/>
+    </select>
+    <select id="findApiRequestExamplesLinkApi" parameterType="Map" resultType="com.gdyx.apidoc.model.ApiRequestExample">
+        SELECT
+        aqe.id,
+        a.`name` AS api_id,
+        aqe.Tag,
+        aqe.Content
+        FROM
+        apirequestexamples AS aqe,
+        apis AS a
+        WHERE
+        aqe.api_id = a.id
+        <include refid="and"/>
+    </select>
+</mapper>

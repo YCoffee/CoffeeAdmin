@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <title>Doc 文档数据管理</title>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <link href="/images/favicon.ico" rel="shortcut icon"/>
+    <style>
+        iframe {
+            width: 100%;
+            height: 99%;
+            border: 0px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">Doc 管理</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-layout-left">
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img"/>
+                    Admin
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item"><a href="/Project/goProject" target='main' title="">项目资料</a></li>
+                <li class="layui-nav-item"><a href="/ProjectModel/goProjectModel" target='main'>项目资料模块</a></li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">接口</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/Api/goApi" target='main'>接口资料</a></dd>
+                        <dd><a href="/ApiRequest/goApiRequest" target="main">接口请求参数</a></dd>
+                        <dd><a href="/ApiRequestExample/goApiRequestExample" target="main">接口请求参数示例</a></dd>
+                        <dd><a href="/ApiResponse/goApiResponse" target="main">接口响应参数</a></dd>
+                        <dd><a href="/ApiResponseExample/goApiResponseExample" target="main">接口响应参数示例</a></dd>
+                        <dd><a href="/ApiExceptionExample/goApiExceptionExample" target="main">接口错误示例</a></dd>
+                        <dd><a href="/ApiExceptionCode/goApiExceptionCode" target="main">接口错误代码描述</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="https://baike.baidu.com/item/%E5%B9%BF%E4%B8%9C%E9%93%B6%E4%BF%A1%E8%81%94%E5%90%88%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/17564910?fr=aladdin" target="main">About</a></li>
+                <li class="layui-nav-item"><a href="http://www.yxunionpay.com" target="main">Link</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <iframe class="" id="admin-iframe" name="main" src="/main"/>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © yxunionpay.com - 银信科技技术部
+        <label class="layui-layout-right">文档数据管理平台</label>
+    </div>
+</div>
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+</script>
+</body>
+</html>
